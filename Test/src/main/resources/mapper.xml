@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Mapper">
+<select id="CheckLogin" resultType="kr.co.dto.MemberDTO">
+	select * from member where id = #{id} and #{password} = (select password from member where id = #{id})
+</select>
+<insert id="Join" parameterType="kr.co.dto.MemberDTO">
+	insert into member(num,name,major,id,password,nickname,email,date) values (#{num},#{name},#{major},#{id},#{password},#{nickname},#{email},null)
+</insert>
+
+<select id="GetMajorBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '학과' order by date desc;
+</select>
+
+<select id="GetFreeBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '자유' order by date desc;
+</select>
+
+<select id="GetSubjectBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '과목' order by date desc;
+</select>
+
+<select id="GetStudyBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '성적' order by date desc;
+</select>
+
+<select id="CheckJoin" parameterType="kr.co.dto.MemberDTO" resultType="kr.co.dto.MemberDTO">
+	select * from member where id = #{id};
+</select>
+</mapper>
