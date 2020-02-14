@@ -9,21 +9,28 @@ public class BoardDTO {
 	int viewcount;
 	int num;
 	boolean end;
-	String major;
 	String topic;
 	Date date;
+	int boardnum;
+	String major;
 	
-	public boolean isEnd() {
-		return end;
-	}
-	public void setEnd(boolean end) {
-		this.end = end;
-	}
 	public String getMajor() {
 		return major;
 	}
 	public void setMajor(String major) {
 		this.major = major;
+	}
+	public int getBoardnum() {
+		return boardnum;
+	}
+	public void setBoardnum(int boardnum) {
+		this.boardnum = boardnum;
+	}
+	public boolean isEnd() {
+		return end;
+	}
+	public void setEnd(boolean end) {
+		this.end = end;
 	}
 	public String getTopic() {
 		return topic;

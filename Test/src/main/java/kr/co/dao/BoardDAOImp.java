@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import kr.co.dto.AnswerDTO;
 import kr.co.dto.BoardDTO;
 import kr.co.dto.MajorDTO;
 import kr.co.dto.MemberDTO;
-import kr.co.dto.StudentDTO;
 
 @Repository
 public class BoardDAOImp implements BoardDAO{
@@ -21,23 +21,25 @@ public class BoardDAOImp implements BoardDAO{
 	private static String NameSpace = "Mapper";
 
 	@Override
-	public MemberDTO CheckLogin(MemberDTO dto) throws Exception {
+	public List<BoardDTO> GetComBoard() throws Exception {
 		// TODO Auto-generated method stub
-		return Sql.selectOne(NameSpace + ".CheckLogin",dto);
+		return Sql.selectList(NameSpace + ".GetComBoard");
 	}
-
 	@Override
-	public void Join(MemberDTO dto) throws Exception {
+	public List<BoardDTO> GetManageBoard() throws Exception {
 		// TODO Auto-generated method stub
-		Sql.insert(NameSpace + ".Join",dto);
+		return Sql.selectList(NameSpace + ".GetManageBoard");
 	}
-
 	@Override
-	public List<BoardDTO> GetMajorBoard() throws Exception {
+	public List<BoardDTO> GetInfoBoard() throws Exception {
 		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetMajorBoard");
+		return Sql.selectList(NameSpace + ".GetInfoBoard");
 	}
-
+	@Override
+	public List<BoardDTO> GetCareerBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectList(NameSpace + ".GetCareerBoard");
+	}
 	@Override
 	public List<BoardDTO> GetStudyBoard() throws Exception {
 		// TODO Auto-generated method stub
@@ -57,11 +59,40 @@ public class BoardDAOImp implements BoardDAO{
 	}
 
 	@Override
-	public MemberDTO CheckJoin(String id) throws Exception {
+	public void JoinDo(MemberDTO dto) throws Exception {
 		// TODO Auto-generated method stub
-		return Sql.selectOne(NameSpace + ".CheckJoin",id);
+		Sql.insert(NameSpace + ".Join",dto);
 	}
 
+	@Override
+	public MemberDTO LoginDo(MemberDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".LoginDO",dto);
+		
+	}
 
+	@Override
+	public MemberDTO numcheck(MemberDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".numcheck",dto);
+	}
+	@Override
+	public BoardDTO GetBoard(int boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".GetBoard",boardnum);
+	}
+	@Override
+	public List<AnswerDTO> GetAnswer(int boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectList(NameSpace + ".GetAnswer",boardnum);
+	}
+	@Override
+	public void BoardWrite(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.insert(NameSpace + ".BoardWrite",dto);
+	}
+	
+
+	
 
 }

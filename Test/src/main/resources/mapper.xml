@@ -3,30 +3,58 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Mapper">
-<select id="CheckLogin" resultType="kr.co.dto.MemberDTO">
-	select * from member where id = #{id} and #{password} = (select password from member where id = #{id})
-</select>
-<insert id="Join" parameterType="kr.co.dto.MemberDTO">
-	insert into member(num,name,major,id,password,nickname,email,date) values (#{num},#{name},#{major},#{id},#{password},#{nickname},#{email},null)
-</insert>
 
-<select id="GetMajorBoard" resultType="kr.co.dto.BoardDTO">
-	select * from board where topic = '학과' order by date desc;
+<select id="GetCareerBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '진로' order by date desc;
 </select>
-
 <select id="GetFreeBoard" resultType="kr.co.dto.BoardDTO">
 	select * from board where topic = '자유' order by date desc;
 </select>
 
 <select id="GetSubjectBoard" resultType="kr.co.dto.BoardDTO">
-	select * from board where topic = '과목' order by date desc;
+	select * from board where topic = '수업' order by date desc;
 </select>
 
 <select id="GetStudyBoard" resultType="kr.co.dto.BoardDTO">
-	select * from board where topic = '성적' order by date desc;
+	select * from board where topic = '공부' order by date desc;
 </select>
 
-<select id="CheckJoin" parameterType="kr.co.dto.MemberDTO" resultType="kr.co.dto.MemberDTO">
-	select * from member where id = #{id};
+<select id="GetComBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '컴퓨터공학과' order by date desc;
 </select>
+
+<select id="GetManageBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where topic = '경영학과' order by date desc;
+</select>
+
+<select id="GetInfoBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where major = '정보통신공학과' order by date desc;
+</select>
+
+
+<insert id="Join" parameterType="kr.co.dto.MemberDTO">
+	insert into member(num,name,password,email,date) values (#{num},#{name},#{password},#{email},null);
+</insert>
+
+<select id="LoginDO" parameterType="kr.co.dto.MemberDTO" resultType="kr.co.dto.MemberDTO">
+	select * from member where #{password} = password and #{num} = num;
+</select>
+
+<select id="numcheck" parameterType="kr.co.dto.MemberDTO" resultType="kr.co.dto.MemberDTO">
+	select * from member where num = #{num};
+</select>
+
+<select id="GetBoard" parameterType="kr.co.dto.BoardDTO" resultType="kr.co.dto.BoardDTO">
+	select * from board where boardnum = #{boardnum};
+</select>
+
+<select id="GetAnswer" parameterType="int" resultType="kr.co.dto.AnswerDTO">
+	select * from answer where boardnum = #{boardnum};
+</select>
+
+<insert id="BoardWrite" parameterType="kr.co.dto.BoardDTO">
+	insert into board(major,topic,boardnum,num,writer,title,content,viewcount,end,date) 
+	values (#{major},#{topic},(select coalesce(max(b.boardnum),0) + 1 from board b),'201434026','철우',#{title},#{content},0,false,null);
+</insert>
+	
 </mapper>

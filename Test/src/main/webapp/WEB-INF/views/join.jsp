@@ -23,8 +23,11 @@
 		  var passwordcheckresult = $('#passwordcheckresult');
 		  var pattern = /^[A-za-z0-9]{5,15}$/g;
 		  //공백포함시
-		  if(password1=="" || password2==""){
+		  if(password2==""){
 			  passwordcheckresult.text('비밀번호 사용불가');
+		  }
+		  else if(!pattern.test(password1)){
+			  passwordcheckresult.text('5~15사이로 입력해주세요');
 		  }
 		  else if(password1==password2){
 			  passwordcheckresult.text('비밀번호 일치');
@@ -40,10 +43,10 @@
 		  var passwordcheckresult = $('#passwordcheckresult');
 		  var pattern = /^[A-za-z0-9]{5,15}$/g;
 		  //공백포함시
-		  if(password1=="" || password2==""){
+		  if(password1==""){
 			  passwordcheckresult.text('비밀번호 사용불가');
 		  }
-		  if(!pattern.test(password1)){
+		  else if(!pattern.test(password1)){
 			  passwordcheckresult.text('5~15사이로 입력해주세요');
 		  }
 		  else if(password1==password2){
@@ -54,35 +57,6 @@
 		  }
 		});
 	  
-	  
-	  $('#id').keyup(function(){
-		  var pattern =  /^[A-za-z0-9]{5,15}/g;
-		  var joinid = $('#id').val();
-		  if($('#id').val()==""){
-			  $('#idcheckresult').text('사용 불가한 아이디입니다');
-			  return;
-		  }
-		  else if(!pattern.test($('#id').val())){
-			  $('#idcheckresult').text('영문+숫자,5~15사이로 입력해주세요');
-			  return;
-		  }
-		  $.ajax({
-			  url : "/idcheck",
-			  type : "post",
-			  data : {"joinid":joinid},
-			  
-			  success :  function(result){
-				  
-				  if(result=='1'){
-					  $('#idcheckresult').text('사용불가한 아이디입니다');
-				  }
-				  else{
-					  $('#idcheckresult').text('사용 가능한 아이디입니다');
-				  }
-				  
-			  }
-		  });
-	  });
 	    
 	  $('#sendemail').click(function(){
 		  var pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -103,24 +77,54 @@
 		  });
 	  });
 	  
-	  $('#submitbutton').click(function(){
-		  if($('#nickname').val()==""){
-			  alert('닉네임이 올바르지 않았습니다');
-		  }else if($('#name').val()==""){
-			  alert('이름이 올바르지 않았습니다');
-		  }else if($('num').val()==""){
-			  alert('학번이 올바르지 않았습니다');
+	  $('#num').keyup(function(){
+		  var pattern = /^[20][0-9]{8}$/;
+		  if(!pattern.test($('#num').val())){
+			  $('#numcheck').text("올바른 학번을 입력해주세요");
+			  return;
 		  }
-		  else if($('#idcheckresult').text()=='사용 가능한 아이디입니다'&&$('#passwordcheckresult').text()=='비밀번호 일치'&&$('#checknumber').val()==checknumber){
-			  $('#join').submit();
-		  }
-		  else{
-			  alert('회원가입준비가 되지 않았습니다');
-		  }
-		  
+		  $.ajax({
+			  url : "/numcheck",
+			  type : "post",
+			  data : {"num":$('#num').val()},
+			  success : function(result){
+				  if(result=="1"){
+					  $('#numcheck').text("사용 가능한 학번입니다");
+				  }
+				  else{
+					  $('#numcheck').text("사용 불가능한 학번입니다");
+				  }
+			  }
+		  });
 	  });
 	  
-	  
+		  $('#submitbutton').click(function(){
+			  if($('#name').val()==''){
+				  alert("이름을 입력해주세요");
+				  return;
+			  }
+			  if($('#password').val()==''){
+				  alert("패스워드를 입력해주세요");
+				  return;
+			  }
+			  if($('#num').val()==''){
+				  alert("학번을 입력해주세요");
+				  return;
+			  }if($('#checknumber').val()==''){
+				  alert("이메일 확인 후 인증번호를 입력해주세요");
+				  return;
+			  }
+			  
+			  if($('#numcheck').text()=='사용 불가능한 학번입니다'){
+				  alert("올바른 학번을 입력해주세요");
+				  return;
+			  }
+			  if($('#passwordcheckresult').text()!='비밀번호 일치'){
+				  alert("비밀번호를 확인해주세요");
+				  return;
+			  }
+			  $('#join').submit();
+	  });
   });
 
   
@@ -130,18 +134,21 @@
 <body>
 <h3>회원가입창입니다</h3>
 <div class="container" style="width: 600px; height: 1200px">
-	<form method="post" id="join" action="/join/join">
-		<!------------ 아이디입력창 ------------>
+	<form method="post" id="join" action="/joinDo">
+	
+		<!------------ 이름입력창 ------------>
 		<div class="form-group">
-			<input type="text" class="form-control" name="id" id="id" required="required" placeholder="아이디">
+			<input type="text" class="form-control" name="name" id="name" required="required" placeholder="이름">
 		</div>
 		<!-- --------------------------- -->
-		
-		<!------------ 아이디상태창 ------------>
-		<div class="row">
-			<div class="col-md-12">
-				<label id="idcheckresult">사용 불가한 아이디입니다</label>
-			</div>
+		<!------------ 학번입력창 ------------>
+		<div class="form-group">
+			<input type="text" class="form-control" name="num" id="num" required="required" placeholder="학번">
+		</div>
+		<!-- --------------------------- -->
+		<!------------ 학번 확인 텍스트 ------------>
+		<div class="form-group">
+			<label class="center-block" id="numcheck">학번 중복 확인 텍스트</label>
 		</div>
 		<!-- --------------------------- -->
 		
@@ -161,41 +168,7 @@
 		<div class="form-group">
 			<label class="center-block" id="passwordcheckresult">비밀번호 사용불가</label>
 		</div>
-		<!-- --------------------------- -->
-		
-		<!------------ 학과선택창 ------------>
-		<div class="form-group">
-			<input type="text" class="form-control" name="nickname" id="nickname" required="required" placeholder="닉네임">
-		</div>
-		<!-- --------------------------- -->
-		
-		<!------------ 이름입력창 ------------>
-		<div class="form-group">
-			<input type="text" class="form-control" name="name" id="name" required="required" placeholder="이름">
-		</div>
-		<!-- --------------------------- -->
-		
-		
-		<!------------ 학과선택창 ------------>
-		<div class="form-group">
-			<select class="form-control" name="major">
-				<option>학과1</option>
-				<option>학과2</option>
-				<option>학과3</option>
-				<option>학과4</option>
-				<option>학과5</option>
-				<option>학과6</option>
-				<option>학과7</option>
-			</select>
-		</div>
-		<!-- --------------------------- -->
-		
-		<!------------ 학번입력창 ------------>
-		<div class="form-group">
-			<input type="text" class="form-control" name="num" id="num" required="required" placeholder="학번">
-		</div>
-		<!-- --------------------------- -->
-		
+		<!-- --------------------------- -->		
 		<!------------ 이메일입력창 ------------>
 		<div class="form-group">
 			<input type="email" class="form-control" name="email" id="email" required="required" placeholder="이메일">

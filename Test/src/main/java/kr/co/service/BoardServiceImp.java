@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import kr.co.dao.BoardDAO;
+import kr.co.dto.AnswerDTO;
 import kr.co.dto.BoardDTO;
-import kr.co.dto.MajorDTO;
 import kr.co.dto.MemberDTO;
 
 @Service
@@ -18,23 +18,25 @@ public class BoardServiceImp implements BoardService {
 	BoardDAO dao;
 
 	@Override
-	public MemberDTO CheckLogin(MemberDTO dto) throws Exception {
+	public List<BoardDTO> GetComBoard() throws Exception {
 		// TODO Auto-generated method stub
-		return dao.CheckLogin(dto);
+		return dao.GetComBoard();
 	}
-
 	@Override
-	public void Join(MemberDTO dto) throws Exception {
+	public List<BoardDTO> GetManageBoard() throws Exception {
 		// TODO Auto-generated method stub
-		dao.Join(dto);
+		return dao.GetManageBoard();
 	}
-
 	@Override
-	public List<BoardDTO> GetMajorBoard() throws Exception {
+	public List<BoardDTO> GetInfoBoard() throws Exception {
 		// TODO Auto-generated method stub
-		return dao.GetMajorBoard();
+		return dao.GetInfoBoard();
 	}
-
+	@Override
+	public List<BoardDTO> GetCareerBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return dao.GetCareerBoard();
+	}
 	@Override
 	public List<BoardDTO> GetStudyBoard() throws Exception {
 		// TODO Auto-generated method stub
@@ -54,9 +56,39 @@ public class BoardServiceImp implements BoardService {
 	}
 
 	@Override
-	public MemberDTO CheckJoin(String id) throws Exception {
+	public void JoinDo(MemberDTO dto) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.CheckJoin(id);
+		dao.JoinDo(dto);
 	}
+
+	@Override
+	public MemberDTO LoginDo(MemberDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.LoginDo(dto);
+	}
+
+	@Override
+	public MemberDTO numcheck(MemberDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.numcheck(dto);
+	}
+	@Override
+	public BoardDTO GetBoard(int boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.GetBoard(boardnum);
+	}
+	@Override
+	public List<AnswerDTO> GetAnswer(int boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.GetAnswer(boardnum);
+	}
+	@Override
+	public void BoardWrite(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		dao.BoardWrite(dto);
+	}
+	
+
+	
 
 }
