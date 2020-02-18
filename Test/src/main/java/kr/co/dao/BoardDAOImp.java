@@ -20,44 +20,7 @@ public class BoardDAOImp implements BoardDAO{
 	
 	private static String NameSpace = "Mapper";
 
-	@Override
-	public List<BoardDTO> GetComBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetComBoard");
-	}
-	@Override
-	public List<BoardDTO> GetManageBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetManageBoard");
-	}
-	@Override
-	public List<BoardDTO> GetInfoBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetInfoBoard");
-	}
-	@Override
-	public List<BoardDTO> GetCareerBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetCareerBoard");
-	}
-	@Override
-	public List<BoardDTO> GetStudyBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetStudyBoard");
-	}
-
-	@Override
-	public List<BoardDTO> GetFreeBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetFreeBoard");
-	}
-
-	@Override
-	public List<BoardDTO> GetSubjectBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return Sql.selectList(NameSpace + ".GetSubjectBoard");
-	}
-
+	
 	@Override
 	public void JoinDo(MemberDTO dto) throws Exception {
 		// TODO Auto-generated method stub
@@ -90,6 +53,18 @@ public class BoardDAOImp implements BoardDAO{
 	public void BoardWrite(BoardDTO dto) throws Exception {
 		// TODO Auto-generated method stub
 		Sql.insert(NameSpace + ".BoardWrite",dto);
+	}
+
+	@Override
+	public List<BoardDTO> GetBoardList(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectList(NameSpace + ".GetBoardList",dto);
+	}
+
+	@Override
+	public List<BoardDTO> GetSearchList(BoardDTO dtoard) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

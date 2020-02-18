@@ -49,10 +49,16 @@ public class BoardController {
 		HttpSession httpsession = request.getSession();//세션 얻어오기
 		model.addAttribute("LoginUser" , httpsession.getAttribute("LoginUser"));//현재 로그인된 아이디를 저장
 		
-		List<BoardDTO> freeboard = Service.GetFreeBoard();//불러온 자유 글 목록
-		List<BoardDTO> subjectboard = Service.GetSubjectBoard();//불러온 수업 글 목록
-		List<BoardDTO> studyboard = Service.GetStudyBoard();//불러온 공부 글 목록
-		List<BoardDTO> careerboard = Service.GetCareerBoard();//불러온 공부 글 목록
+		BoardDTO selectoption = new BoardDTO();
+
+		selectoption.setTopic("자유");
+		List<BoardDTO> freeboard = Service.GetBoardList(selectoption);//불러온 자유 글 목록
+		selectoption.setTopic("수업");
+		List<BoardDTO> subjectboard = Service.GetBoardList(selectoption);//불러온 수업 글 목록
+		selectoption.setTopic("공부");
+		List<BoardDTO> studyboard = Service.GetBoardList(selectoption);//불러온 공부 글 목록
+		selectoption.setTopic("진로");
+		List<BoardDTO> careerboard = Service.GetBoardList(selectoption);//불러온 진로 글 목록
 		
 		for(BoardDTO dto : freeboard) {//제목이 길면 줄이기
 			if(dto.getTitle().length() > 7) {
@@ -75,15 +81,15 @@ public class BoardController {
 			}
 		}
 		
-		model.addAttribute("careerboard",careerboard);
 		model.addAttribute("freeboard",freeboard);
 		model.addAttribute("subjectboard",subjectboard);
 		model.addAttribute("studyboard",studyboard);
+		model.addAttribute("careerboard",careerboard);
 		
 		return "/main";
 	}
 	
-	@RequestMapping(value = "/main/loggout" , method = RequestMethod.GET)
+	@RequestMapping(value = "/logout" , method = RequestMethod.GET)
 	public String MainLogOut(Model model,HttpServletResponse response,HttpServletRequest request) throws Exception{
 		HttpSession httpsession = request.getSession();
 		httpsession.removeAttribute("LoginUser");
@@ -148,83 +154,65 @@ public class BoardController {
 	/*-------------ListView-------------*/
 	
 	@RequestMapping(value = "/list" , method = RequestMethod.GET)
-	public String ViewList(@RequestParam String topic,Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	public String ViewList(@RequestParam(required = false,defaultValue="%") String title,@RequestParam(required = false,defaultValue="%") String writer,@RequestParam(required = false,defaultValue="%") String topic,@RequestParam int page,Model model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		HttpSession httpsession = request.getSession();//세션 얻어오기
+		model.addAttribute("LoginUser" , httpsession.getAttribute("LoginUser"));//현재 로그인된 아이디를 저장
 		
-		List<BoardDTO> freeboard = Service.GetFreeBoard();//불러온 자유 글 목록
-		List<BoardDTO> subjectboard = Service.GetSubjectBoard();//불러온 수업 글 목록
-		List<BoardDTO> studyboard = Service.GetStudyBoard();//불러온 공부 글 목록
-		List<BoardDTO> careerboard = Service.GetCareerBoard();//불러온 공부 글 목록
-		
-		List<BoardDTO> manageboard = Service.GetManageBoard();//불러온 경영학과 글 목록
-		List<BoardDTO> comboard = Service.GetComBoard();//불러온 컴퓨터공학과 글 목록
-		List<BoardDTO> infoboard = Service.GetInfoBoard();//불러온 정보통신학과 글 목록
-		
-		for(BoardDTO dto : freeboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
+		List<BoardDTO> selectboard = null;
+		BoardDTO selectoption = new BoardDTO();
+		//( ( 현재 보고 있는 페이지 번호 - 1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 +1
+		System.out.println(writer + "," + topic);
+		selectoption.setTopic(topic);
+		selectoption.setWriter(writer);
+		selectoption.setTitle(title);
+		selectboard = Service.GetBoardList(selectoption);//불러온 글 목록}
+
+		////////////////////////////////////////////////////////////////////////////////////
+		int pageslice=10;
+		int maxpage=0;
+			if(selectboard.size()>=pageslice) {//15보다 많은 글이 있고
+				if(selectboard.size()%pageslice==0) {//15의 배수다
+					maxpage = selectboard.size()/pageslice;
+				}
+				else {
+					maxpage = (selectboard.size()/pageslice)+1;
+				}
+			}else {
+				maxpage = 1;
 			}
-		}
-		for(BoardDTO dto : subjectboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
-			}
-		}
-		for(BoardDTO dto : studyboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
-			}
-		}
-		for(BoardDTO dto : careerboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
-			}
+		int start = ((page - 1) / 5)*5+1;//시작페이지
+		int end = start + 5 - 1;//마지막페이지
+		if(end > maxpage) {
+			end = maxpage;
 		}
 		
-		for(BoardDTO dto : manageboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
+		model.addAttribute("startpage" , start);
+		model.addAttribute("endpage" , end);
+		model.addAttribute("topic",topic);
+		model.addAttribute("writer",writer);
+		model.addAttribute("maxpage",maxpage);
+		
+		////////////////////////////////////////////////////////////////////////////////////
+		//페이징
+			if(selectboard.size()==page*pageslice) {//글수가 15의 배수로  떨어질때
+				selectboard = selectboard.subList((page*pageslice)-pageslice, (page*pageslice));
 			}
-		}
-		for(BoardDTO dto : comboard) {//제목이 길면 줄이기
-			if(dto.getTitle().length() > 10) {
-				dto.setTitle(dto.getTitle().substring(0,10)+"...");
+			else if(selectboard.size()>page*pageslice){
+				selectboard = selectboard.subList((page*pageslice)-pageslice, (page*pageslice));
 			}
-		}
-		for(BoardDTO dto : careerboard) {//제목이 길면 줄이기
+			else if(selectboard.size()<page*pageslice){
+				selectboard = selectboard.subList((page*pageslice)-pageslice, selectboard.size());
+			}
+		/////////////////////////////////////////////////////////////////////////////////////
+		
+		for(BoardDTO dto : selectboard) {//제목이 길면 줄이기
 			if(dto.getTitle().length() > 10) {
 				dto.setTitle(dto.getTitle().substring(0,10)+"...");
 			}
 		}
 		////////////////////////////////////////////////////////////
 		
-		model.addAttribute("careerboard",careerboard);
-		model.addAttribute("freeboard",freeboard);
-		model.addAttribute("subjectboard",subjectboard);
-		model.addAttribute("studyboard",studyboard);
-		
-		model.addAttribute("manageboard",manageboard);
-		model.addAttribute("comboard",comboard);
-		model.addAttribute("infoboard",infoboard);
-		
-		
-		
-		model.addAttribute("topic",topic);
-		
-		if(topic.equals("free")) {
-			model.addAttribute("maxpage", (freeboard.size()/15));
-		}
-		else if(topic.equals("career")) {
-			model.addAttribute("maxpage", (careerboard.size()/15));
-		}
-		else if(topic.equals("subject")) {
-			model.addAttribute("maxpage", (subjectboard.size()/15));
-		}
-		else if(topic.equals("study")) {
-			model.addAttribute("maxpage", (studyboard.size()/15));
-		}
-		
-		
-		
+		model.addAttribute("selectboard",selectboard);
 		
 		return "/list";
 	}
@@ -275,13 +263,11 @@ public class BoardController {
 	@RequestMapping(value = "/view" , method = RequestMethod.GET)
 	public void ViewView(@RequestParam int boardnum,Model model,HttpServletRequest request)throws Exception{
 		HttpSession httpsession = request.getSession();//세션 얻어오기
+		
 		model.addAttribute("LoginUser" , httpsession.getAttribute("LoginUser"));//현재 로그인된 아이디를 저장
 		model.addAttribute("SelectedBoard",Service.GetBoard(boardnum));//선택된 글 가져오기
-		
-		List<AnswerDTO> answerlist = Service.GetAnswer(boardnum);
-		System.out.println("크기" + answerlist.size());
-		model.addAttribute("SelectedBoardAnswerList",answerlist);//선택된 글 답 가져오기
-	}
+		model.addAttribute("SelectedBoardAnswerList",Service.GetAnswer(boardnum));//선택된 글 답 가져오기
+	}	
 	
 	/*-------------WriteView-------------*/
 	

@@ -9,14 +9,8 @@ import kr.co.dto.MemberDTO;
 
 public interface BoardDAO {
 	//***게시판관련***
-	public List<BoardDTO> GetCareerBoard() throws Exception;//진로주제 글 불러오기
-	public List<BoardDTO> GetStudyBoard() throws Exception;//공부주제 글 불러오기
-	public List<BoardDTO> GetFreeBoard() throws Exception;//자유주제 글 불러오기
-	public List<BoardDTO> GetSubjectBoard() throws Exception;//수업주제 글 불러오기
-	
-	public List<BoardDTO> GetComBoard() throws Exception;//컴공 글 불러오기
-	public List<BoardDTO> GetManageBoard() throws Exception;//경영 글 불러오기
-	public List<BoardDTO> GetInfoBoard() throws Exception;//정통 글 불러오기
+	public List<BoardDTO> GetBoardList(BoardDTO dto) throws Exception;
+	public List<BoardDTO> GetSearchList(BoardDTO dt) throws Exception;
 	
 	//***회원가입관련***
 	public void JoinDo(MemberDTO dto) throws Exception;//회원가입하기

@@ -40,41 +40,20 @@
 				
 			</div>
 			<!-- -----------------------------------두번째줄----------------------------------- -->
-			<!------------ 로그인,검색------------>
-			<div class="col-md-3" style="height: 50px; background: red">
-				
-			</div>
-			
-			<div class="col-md-6" style="height: 50px; background: orange">
-
-			</div>
-			<div class="col-md-3" style="padding:0px; height: 50px; background: white">
-				<c:choose>
-					<c:when test="${LoginUser == null}">
-						<button class="btn btn-primary col-md-4 col-md-offset-1" type="button" onclick="location.href='/login'" style="margin-top: 10px;">로그인</button>
-						<button class="btn btn-primary col-md-4 col-md-offset-2" type="button" onclick="location.href='/join'" style="margin-top: 10px;">회원가입</button>
-					</c:when>
-					<c:when test="${LoginUser != null}">
-						<button class="btn btn-primary  col-md-4 col-md-offset-1" type="button" onclick="location.href='/main/loggout'" style="margin-top: 10px;">로그아웃</button>
-						<button class="btn btn-info  col-md-4 col-md-offset-2" type="button" onclick="location.href='/join'" style="margin-top: 10px;">내정보</button>
-					</c:when>
-				</c:choose>
-			</div>
-			<!-- -----------------------------------세번째줄----------------------------------- -->
 			<!-- 글리스트이동 -->
 			<div class="col-md-12" style="padding:0px;">
 				<nav class="navbar navbar-inverse">
 					<div class="container-fluid">
 						<div class="navbar-header">
-							<a class="navbar-brand" href="#">메인</a>
+							<a class="navbar-brand" href="/">메인</a>
 						</div>
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">학과별<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="/list?topic=com">컴퓨터공학과</a></li>
-								<li><a href="/list?topic=manage">경영학과</a></li>
-								<li><a href="/list?topic=info">정보통신공학과</a></li>
+								<li><a href="/list?topic=com&page=1">컴퓨터공학과</a></li>
+								<li><a href="/list?topic=manage&page=1">경영학과</a></li>
+								<li><a href="/list?topic=info&page=1">정보통신공학과</a></li>
 								<li><a href="#">어둠의마법방어술학과</a></li>
 							</ul>
 						</li>
@@ -82,17 +61,40 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">주제별<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="/list?topic=free">자유</a></li>
-								<li><a href="/list?topic=subject">수업</a></li>
-								<li><a href="/list?topic=study">공부</a></li>
-								<li><a href="/list?topic=career">진로</a></li>
+								<li><a href="/list?topic=자유&page=1">자유</a></li>
+								<li><a href="/list?topic=수업&page=1">수업</a></li>
+								<li><a href="/list?topic=공부&page=1">공부</a></li>
+								<li><a href="/list?topic=진로&page=1">진로</a></li>
 							</ul>
 						</li>
+						<li class="active"><a href="#">순위</a></li>
+						<li class="active"><a href="#">공지사항</a></li>
 					</ul>
+					<form class="navbar-form navbar-left" action="/search" method="post">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="검색">
+							</div>
+							<button type="submit" class="btn btn-default">검색</button>
+					</form>
+					<c:choose>
+						<c:when test="${LoginUser == null}">
+							<ul class="nav navbar-nav navbar-right">
+      							<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span>로그인</a></li>
+      							<li><a href="/join"><span class="glyphicon glyphicon-user"></span>회원가입</a></li>
+    						</ul>
+						</c:when>
+						<c:when test="${LoginUser != null}">
+							<ul class="nav navbar-nav navbar-right">
+      							<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>로그아웃</a></li>
+      							<li><a href="/myinfo"><span class="glyphicon glyphicon-user"></span>내정보</a></li>
+    						</ul>
+						</c:when>
+					</c:choose>
 					</div>
 				</nav>
 			</div>
-			<!-- -----------------------------------네번째줄----------------------------------- -->
+			<!-- -----------------------------------세번째줄----------------------------------- -->
+			
 			<!------------ 랜덤질문 ------------>
 			<div class="col-md-3" style="height: 300px; padding: 0px;">
 				<a href="#"><img src="/resources/image/A.png" class="img-rounded"></a>

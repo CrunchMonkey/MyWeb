@@ -38,33 +38,13 @@
 				
 			</div>
 			<!-- --------------------------- -->
-			<!------------ 로그인,검색------------>
-			<div class="col-md-3" style="height: 50px; background: red">
-				
-			</div>
-			
-			<div class="col-md-6" style="height: 50px; background: orange">
-
-			</div>
-			<div class="col-md-3" style="padding:0px; height: 50px; background: white">
-				<c:choose>
-					<c:when test="${LoginUser == null}">
-						<button class="btn btn-primary col-md-4 col-md-offset-1" type="button" onclick="location.href='/login'" style="margin-top: 10px;">로그인</button>
-						<button class="btn btn-primary col-md-4 col-md-offset-2" type="button" onclick="location.href='/join'" style="margin-top: 10px;">회원가입</button>
-					</c:when>
-					<c:when test="${LoginUser != null}">
-						<button class="btn btn-primary  col-md-4 col-md-offset-1" type="button" onclick="location.href='/main/loggout'" style="margin-top: 10px;">로그아웃</button>
-						<button class="btn btn-info  col-md-4 col-md-offset-2" type="button" onclick="location.href='/join'" style="margin-top: 10px;">내정보</button>
-					</c:when>
-				</c:choose>
-			</div>
 			<!-- -----------------------------------두번째줄----------------------------------- -->
 			<!-- 글리스트이동 -->
 			<div class="col-md-12" style="padding:0px;">
 				<nav class="navbar navbar-inverse">
 					<div class="container-fluid">
 						<div class="navbar-header">
-							<a class="navbar-brand" href="#">메인</a>
+							<a class="navbar-brand" href="/">메인</a>
 						</div>
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
@@ -86,7 +66,28 @@
 								<li><a href="/list?topic=career">진로</a></li>
 							</ul>
 						</li>
+						<li class="active"><a href="#">순위</a></li>
 					</ul>
+					<form class="navbar-form navbar-left" action="/search" method="post">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="검색">
+							</div>
+							<button type="submit" class="btn btn-default">검색</button>
+					</form>
+					<c:choose>
+						<c:when test="${LoginUser == null}">
+							<ul class="nav navbar-nav navbar-right">
+      							<li><a href="/login"><span class="glyphicon glyphicon-user"></span>로그인</a></li>
+      							<li><a href="/join"><span class="glyphicon glyphicon-log-in"></span>회원가입</a></li>
+    						</ul>
+						</c:when>
+						<c:when test="${LoginUser != null}">
+							<ul class="nav navbar-nav navbar-right">
+      							<li><a href="/logout"><span class="glyphicon glyphicon-user"></span>로그아웃</a></li>
+      							<li><a href="/myinfo"><span class="glyphicon glyphicon-log-in"></span>내정ㅂ</a></li>
+    						</ul>
+						</c:when>
+					</c:choose>
 					</div>
 				</nav>
 			</div>

@@ -17,43 +17,6 @@ public class BoardServiceImp implements BoardService {
 	@Inject
 	BoardDAO dao;
 
-	@Override
-	public List<BoardDTO> GetComBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetComBoard();
-	}
-	@Override
-	public List<BoardDTO> GetManageBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetManageBoard();
-	}
-	@Override
-	public List<BoardDTO> GetInfoBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetInfoBoard();
-	}
-	@Override
-	public List<BoardDTO> GetCareerBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetCareerBoard();
-	}
-	@Override
-	public List<BoardDTO> GetStudyBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetStudyBoard();
-	}
-
-	@Override
-	public List<BoardDTO> GetFreeBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetFreeBoard();
-	}
-
-	@Override
-	public List<BoardDTO> GetSubjectBoard() throws Exception {
-		// TODO Auto-generated method stub
-		return dao.GetSubjectBoard();
-	}
 
 	@Override
 	public void JoinDo(MemberDTO dto) throws Exception {
@@ -87,8 +50,11 @@ public class BoardServiceImp implements BoardService {
 		// TODO Auto-generated method stub
 		dao.BoardWrite(dto);
 	}
-	
 
-	
+	@Override
+	public List<BoardDTO> GetBoardList(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.GetBoardList(dto);
+	}
 
 }
