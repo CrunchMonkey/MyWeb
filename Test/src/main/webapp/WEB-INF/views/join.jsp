@@ -36,7 +36,6 @@
 			  passwordcheckresult.text('비밀번호 불일치');
 		  }
 		});
-	  
 	  $('#password').keyup(function() {
 		  var password1 =  $('#password').val();
 		  var password2 =  $('#passwordcheck').val();
@@ -56,8 +55,6 @@
 			  passwordcheckresult.text('비밀번호 불일치');
 		  }
 		});
-	  
-	    
 	  $('#sendemail').click(function(){
 		  var pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 		  if(!pattern.test($('#email').val())){
@@ -132,8 +129,7 @@
 </script>
 </head>
 <body>
-<h3>회원가입창입니다</h3>
-<div class="container" style="width: 600px; height: 1200px">
+<div class="container" style="width: 600px; height: 600px;  padding-top: 10%;">
 	<form method="post" id="join" action="/joinDo">
 	
 		<!------------ 이름입력창 ------------>

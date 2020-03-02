@@ -20,22 +20,41 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>
   $( document ).ready( function() {
-	  
+	  $('#allsearchbutton').click(function(){
+
+		  if($('#allsearch').val()==''){
+			  alert('검색어를 입력해주세요');
+		  }
+		  else{
+			  location.href = '/list?major=%&topic=%&title=' + $('#allsearch').val() + '&page=1';
+		  }
+	  });
 	  $('#searchbutton').click(function(){
 
 		  if($('#search').val()==''){
 			  alert('검색어를 입력해주세요');
 		  }
 		  else if($('#selectoption').val()=='제목'){
-			  location.href = '/list?topic=${topic}&title=' + $('#search').val() + '&page=1';
+			  location.href = '/list?major=${major}&topic=${topic}&title=' + $('#search').val() + '&page=1';
 		  }
 		  else if($('#selectoption').val()=='작성자'){
-			  location.href = '/list?topic=${topic}&writer=' + $('#search').val() + '&page=1';
+			  location.href = '/list?major=${major}&topic=${topic}&writer=' + $('#search').val() + '&page=1';
 		  }
 	  });
 	  
 	  $('#writebutton').click(function(){
-		  alert( + "글쓰기버튼입니다");
+		  if("${LoginUser}"==""){
+			  if(confirm("글은 로그인 후 쓸 수 있습니다. 로그인 하시겠습니까?")){
+				  location.href = '/login';
+			  }
+			  else{
+				  return;
+			  }
+		  }
+		  else{
+			  location.href = '/write?kind=q';
+		  }
+		   
 	  });
   } );
 </script>
@@ -62,9 +81,9 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">학과별<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="/list?topic=컴퓨터공학과&page=1">컴퓨터공학과</a></li>
-								<li><a href="/list?topic=경영학과&page=1">경영학과</a></li>
-								<li><a href="/list?topic=정보통신공학과&page=1">정보통신공학과</a></li>
+								<li><a href="/list?major=컴퓨터공학&page=1">컴퓨터공학</a></li>
+								<li><a href="/list?major=경영학&page=1">경영학</a></li>
+								<li><a href="/list?major=정보통신공학&page=1">정보통신공학</a></li>
 								<li><a href="#">어둠의마법방어술학과</a></li>
 							</ul>
 						</li>
@@ -78,13 +97,12 @@
 								<li><a href="/list?topic=진로&page=1">진로</a></li>
 							</ul>
 						</li>
-						<li class="active"><a href="#">순위</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" action="/search" method="post">
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="검색">
+								<input type="text" class="form-control" placeholder="검색" id="allsearch">
 							</div>
-							<button type="submit" class="btn btn-default">검색</button>
+							<button type="submit" class="btn btn-default" id="allsearchbutton">검색</button>
 					</form>
 					<c:choose>
 						<c:when test="${LoginUser == null}">
@@ -96,7 +114,7 @@
 						<c:when test="${LoginUser != null}">
 							<ul class="nav navbar-nav navbar-right">
       							<li><a href="/logout"><span class="glyphicon glyphicon-user"></span>로그아웃</a></li>
-      							<li><a href="/myinfo"><span class="glyphicon glyphicon-log-in"></span>내정ㅂ</a></li>
+      							<li><a href="/myinfo"><span class="glyphicon glyphicon-log-in"></span>내정보</a></li>
     						</ul>
 						</c:when>
 					</c:choose>
@@ -110,22 +128,24 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th class="col-md-2">카테고리</th>
-							<th class="col-md-3">글제목</th>
-							<th class="col-md-2">작성자</th>
-							<th class="col-md-2">작성일</th>
-							<th class="col-md-2">조회수</th>
+							<th class="col-md-1 text-center">주제</th>
+							<th class="col-md-2 text-center">학과</th>
+							<th class="col-md-3 text-center">글제목</th>
+							<th class="col-md-2 text-center">작성자</th>
+							<th class="col-md-2 text-center">작성일</th>
+							<th class="col-md-2 text-center">조회수</th>
 						</tr>
 					</thead>
 					
 					<tbody>
 						<c:forEach items="${selectboard}" var="selectboard" begin="0">
 								<tr>
-									<td class="col-md-3">${selectboard.getTopic()}</td>
-									<td class="col-md-3"><a href="/view?boardnum=${selectboard.getBoardnum()}">${selectboard.getTitle()}</a></td>
-									<td class="col-md-2">${selectboard.getWriter()}</td>
-									<td class="col-md-2">${selectboard.getDate()}</td>
-									<td class="col-md-2">${selectboard.getViewcount()}</td>
+									<td align="center" class="col-md-1">${selectboard.getTopic()}</td>
+									<td align="center" class="col-md-2">${selectboard.getMajor()}</td>
+									<td align="center" class="col-md-3"><a href="/view?boardnum=${selectboard.getBoardnum()}">${selectboard.getTitle()}</a></td>
+									<td align="center" class="col-md-2">${selectboard.getWriter()}</td>
+									<td align="center" class="col-md-2">${selectboard.getDate()}</td>
+									<td align="center" class="col-md-2">${selectboard.getViewcount()}</td>
 								</tr>
 						</c:forEach>
 					</tbody>
@@ -134,15 +154,15 @@
 					<nav class="col-md-6" style="padding: 0px;">
 						<ul class="pagination" style="padding: 0px; margin: 0px">
 							<c:if test="${startpage > 1}">
-								<li><a href="/list?topic=${topic}&page=${startpage-1}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+								<li><a href="/list?major=${major}&topic=${topic}&writer=${writer}&title=${title}&page=${startpage-1}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
 							</c:if>
 							
 							<c:forEach var="i" begin="${startpage}" end="${endpage}">
-								<li><a href="/list?topic=${topic}&writer=${writer}&page=${i}">${i}</a></li>
+								<li><a href="/list?major=${major}&topic=${topic}&writer=${writer}&title=${title}&page=${i}">${i}</a></li>
 							</c:forEach>
 							
 							<c:if test="${maxpage > endpage}">
-								<li><a href="/list?topic=${topic}&page=${startpage+5}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+								<li><a href="/list?major=${major}&topic=${topic}&writer=${writer}&title=${title}&page=${startpage+5}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
 							</c:if>
 						</ul>
 					</nav>
@@ -179,6 +199,9 @@
 						
 				</div>
 			</div>
+		</div>
+				<div style="height: 100px; background: #E4F7BA; padding-top: 50px">
+			<h4 align="center">만든이: 이승렬	-	이메일: dltmdfuf95@naver.com	-	사이트 이용약관	-	개인정보처리방침</h4>
 		</div>
 	</div>
 </div>

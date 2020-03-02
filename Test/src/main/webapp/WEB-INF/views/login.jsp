@@ -40,7 +40,7 @@
 </script>
 </head>
 <body>
-<div class="center-block" align="center" style="width: 300px; height: 600px">
+<div class="center-block" align="center" style="width: 300px; height: 600px;  padding-top: 15%;">
 	<form method="post" action="/logindo" class="center-bloc">
 	<div class="form-group">
 		<input type="text" class="form-control" name="num" id="num" required="required" placeholder="학번">

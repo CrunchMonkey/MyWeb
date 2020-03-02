@@ -66,6 +66,93 @@ public class BoardDAOImp implements BoardDAO{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void BoardModify(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.update(NameSpace + ".BoardModify",dto);
+	}
+
+	@Override
+	public void AnswerWrite(AnswerDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.insert(NameSpace + ".AnswerWrite",dto);
+	}
+
+	@Override
+	public MemberDTO GetMemberInfo(MemberDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		
+		return Sql.selectOne(NameSpace + ".GetMemberInfo",dto);
+	}
+
+	@Override
+	public void BoardDelete(String boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.delete(NameSpace + ".BoardDelete",boardnum);
+		Sql.delete(NameSpace + ".AnswerDelete",boardnum);
+	}
+
+	@Override
+	public AnswerDTO GetAnswerOne(int num) throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".GetAnswerOne",num);
+	}
+
+	@Override
+	public void AnswerModify(AnswerDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.update(NameSpace + ".AnswerModify",dto);
+	}
+
+	@Override
+	public void ViewCount(BoardDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.update(NameSpace + ".ViewCount" , dto);
+	}
+
+	@Override
+	public void AnswerDelete(AnswerDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.delete(NameSpace + ".AnswerDelete",dto);
+	}
+
+	@Override
+	public void AnswerDelete2(int num) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.delete(NameSpace + ".AnswerDelete2",num);
+	}
+
+	@Override
+	public void AdopAnswer(int num) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.update(NameSpace + ".AdopAnswer",num);
+	}
+
+	@Override
+	public void AdopBoard(int boardnum) throws Exception {
+		// TODO Auto-generated method stub
+		Sql.update(NameSpace + ".AdopBoard",boardnum);
+	}
+
+	@Override
+	public BoardDTO GetManyBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".GetManyBoard");
+	}
+
+	@Override
+	public BoardDTO GetRandomBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".GetRandomBoard");
+	}
+
+	@Override
+	public BoardDTO GetFinishBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return Sql.selectOne(NameSpace + ".GetFinishBoard");
+	}
+
 	
 
 	

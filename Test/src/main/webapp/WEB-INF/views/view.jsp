@@ -18,18 +18,127 @@
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.9.2/basic/ckeditor.js"></script>
 <script>
   $( document ).ready( function() {
+	  $('#boardmodify').click(function(){
+		  if("${LoginUser}"==""){
+			  alert("수정은 로그인 후 가능합니다.");
+			  if(confirm("로그인 하시겠습니까?")){
+				  location.href="/login";
+			  }
+		  }
+		  else if("${SelectedBoard.num}"=="${LoginUser}"){
+			  if(confirm("정말 수정하시겠습니까?")){
+				  location.href = '/write?kind=qm&boardnum=${SelectedBoard.boardnum}';  
+			  }
+		  }
+		  else{
+			  alert("작성자만 수정이 가능합니다");
+		  }
+	  });
 	  
+	  $('#boarddelete').click(function(){
+		  if("${LoginUser}"==""){
+			  alert("삭제는 로그인 후 가능합니다.");
+			  if(confirm("로그인 하시겠습니까?")){
+				  location.href="/login";
+			  }
+		  }
+		  else if("${SelectedBoard.num}"=="${LoginUser}"){
+			  if(confirm("정말 삭제하시겠습니까?")){
+				  alert("삭제되었습니다");
+				  location.href = '/delete?boardnum=${SelectedBoard.boardnum}&topic=${SelectedBoard.topic}';  
+			  }
+		  }
+		  else{
+			  alert("작성자만 삭제가 가능합니다");
+		  }
+	  });
+	  
+	  $('#answermodity').click(function(){
+		  if("${LoginUser}"==""){
+			  if(confirm("답변 수정은 로그인 후 쓸 수 있습니다. 로그인 하시겠습니까?")){
+				  location.href = '/login';
+			  }
+		  }
+		  else if($('#answerwriternum').val()=="${LoginUser}"){
+			  if(confirm("정말 수정하시겠습니까?")){
+				  location.href = '/write?kind=am&boardnum=${SelectedBoard.boardnum}&num=' + $('#answernum').val();
+			  }
+		  }
+		  else{
+			  alert("작성자만 삭제가 가능합니다");
+		  }
+	  });
+	  
+	  $('#answerdelete').click(function(){
+		  if("${LoginUser}"==""){
+			  if(confirm("답변 삭제는 로그인 후 쓸 수 있습니다. 로그인 하시겠습니까?")){
+				  location.href = '/login';
+			  }
+		  }
+		  else if($('#answerwriternum').val()=="${LoginUser}"){
+			  if(confirm("정말 삭제하시겠습니까?")){
+				  location.href = '/answerdelete?boardnum=${SelectedBoard.boardnum}&num=' + $('#answernum').val();
+			  }
+		  }
+		  else{
+			  alert("작성자만 삭제가 가능합니다");
+		  }
+	  });
+	  
+	  $("button[name=adopbutton]").click(function(){
+		  if("${LoginUser}"==""){
+			  if(confirm("답변 채택은 로그인 후 쓸 수 있습니다. 로그인 하시겠습니까?")){
+				  location.href = '/login';
+			  }
+		  }
+		  else if("${LoginUser}"!="${SelectedBoard.num}"){
+			  alert("질문 작성자만 채택할 수 있습니다");
+		  }
+		  else{
+			  if("${SelectedBoard.end}"==false){
+				  alert("이미");
+			  }
+			  else{
+				  if("${SelectedBoard.end}"!='false'){
+					  alert("이미 완료된 질문입니다");
+				  }
+				  else{
+					  location.href = '/adop?boardnum=${SelectedBoard.boardnum}&num=' + $("input[name=answernum]").val(); 
+				  }
+			  }
+			  
+		  }
+	  });
+	  
+	  $('#answerwritebutton').click(function(){
+		  if("${LoginUser}"==""){
+			  if(confirm("답변 작성은 로그인 후 쓸 수 있습니다. 로그인 하시겠습니까?")){
+				  location.href = '/login';
+			  }
+		  }
+		  else{
+			  $('#answerwriteform').submit();
+		  }
+	  });
+	  
+	  $('#allsearchbutton').click(function(){
+
+		  if($('#allsearch').val()==''){
+			  alert('검색어를 입력해주세요');
+		  }
+		  else{
+			  location.href = '/list?major=%&topic=%&title=' + $('#allsearch').val() + '&page=1';
+		  }
+	  });
   } );
-  function IdCheck(){
-	  
-  }
 </script>
 </head>
 <body>
-<div class="container" style="width: 1600px; height: 3200px; background: #655c56" >
-	<div class="container" style="width: 1200px; background: #E4F7BA">
+<div class="container" style="width: 1600px; height: 1600px; background: white" >
+	<div class="container" style="width: 1200px; background: white">
 		<div class="row">
 			<!-- 로고 -->
 			<div class="col-md-12" style="height: 100px; background: white">
@@ -40,7 +149,7 @@
 			<!------------검색------------>
 			<!-- 글리스트이동 -->
 			<div class="col-md-12" style="padding:0px;">
-				<nav class="navbar navbar-inverse" style="margin-bottom: 50px">
+				<nav class="navbar navbar-inverse">
 					<div class="container-fluid">
 						<div class="navbar-header">
 							<a class="navbar-brand" href="/">메인</a>
@@ -49,9 +158,9 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">학과별<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="/list?topic=com&page=1">컴퓨터공학과</a></li>
-								<li><a href="/list?topic=manage&page=1">경영학과</a></li>
-								<li><a href="/list?topic=info&page=1">정보통신공학과</a></li>
+								<li><a href="/list?topic=컴퓨터공학&page=1">컴퓨터공학과</a></li>
+								<li><a href="/list?topic=경역학&page=1">경영학과</a></li>
+								<li><a href="/list?topic=정보통신공&page=1">정보통신공학과</a></li>
 								<li><a href="#">어둠의마법방어술학과</a></li>
 							</ul>
 						</li>
@@ -59,19 +168,18 @@
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">주제별<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="/list?topic=free&page=1">자유</a></li>
-								<li><a href="/list?topic=subject&page=1">수업</a></li>
-								<li><a href="/list?topic=study&page=1">공부</a></li>
-								<li><a href="/list?topic=career&page=1">진로</a></li>
+								<li><a href="/list?topic=자유&page=1">자유</a></li>
+								<li><a href="/list?topic=수업&page=1">수업</a></li>
+								<li><a href="/list?topic=공부&page=1">공부</a></li>
+								<li><a href="/list?topic=진로&page=1">진로</a></li>
 							</ul>
 						</li>
-						<li class="active"><a href="#">순위</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" action="/search" method="post">
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="검색">
+								<input type="text" class="form-control" placeholder="검색"  id="allsearch">
 							</div>
-							<button type="submit" class="btn btn-default">검색</button>
+							<button type="button" class="btn btn-default" id="allsearchbutton">검색</button>
 					</form>
 					<c:choose>
 						<c:when test="${LoginUser == null}">
@@ -92,9 +200,19 @@
 			</div>
 			<!-- 글보기 배경-->
 			<div class="col-md-12" style="padding: 0px;background: white">
-				<div class="col-md-6 col-md-offset-3 panel panel-default" style="padding: 0px; margin-top: 25px; margin-bottom: 25px;">
+				<div class="col-md-6 col-md-offset-3 panel panel-default" style="padding: 0px;">
 					<!-- 이미지 -->
-					<div class="col-md-2" style="height: 100px; padding: 0px;"><img src="/resources/image/question.png" class="img-rounded"></div>
+					<div class="col-md-2" style="height: 100px; padding: 0px;">
+						<c:choose>
+							<c:when test="${SelectedBoard.end eq false}">
+								<img src="/resources/image/question.png" class="img-rounded">
+							</c:when>
+							<c:when test="${SelectedBoard.end eq true}">
+								<img src="/resources/image/adq.png" class="img-rounded">
+							</c:when>
+						</c:choose>
+						
+					</div>
 					<!-- 글제목 -->
 					<div class="col-md-10 panel panel-default" style="height: 100px; background: #fdfdfd; word-wrap: break-word;"><h4 style="margin: 10px">${SelectedBoard.title}</h4></div>
 					<!-- 글내용 -->
@@ -124,19 +242,21 @@
 							</h4>
 						</div>
 						<!-- 수정 -->
-						<div class="col-md-2">
-							<button type="button" class="btn btn-primary btn-sm" style="margin: 5px 0px 5px 0px;">
-								<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+						<div class="col-md-1" style="padding: 0px">
+							<button type="button" class="btn btn-primary btn-xs" style="margin: 10px 0px 10px 0px;" id="boardmodify">
+								<span class="glyphicon glyphicon-wrench" aria-hidden="true" ></span>
 								수정
 							</button>
 						</div>
-						
-						<div class="col-md-2">
-							<button type="button" class="btn btn-primary btn-sm" style="margin: 5px 0px 5px 0px;">
-								<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+						<!-- 삭제-->
+						<div class="col-md-1" style="padding: 0px">
+							<button type="button" class="btn btn-primary btn-xs" style="margin: 10px 0px 10px 0px;" id="boarddelete">
+								<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 								삭제
 							</button>
 						</div>
+						
+						
 					</div>
 					
 				</div>
@@ -147,7 +267,7 @@
 					<c:choose>
 						<c:when test="${fn:length(SelectedBoardAnswerList) == 0}">
 							<div class="col-md-12" style="padding: 0px;background: #EAEAEA">
-								<div class="col-md-6 col-md-offset-3 panel panel-default" style="background: white; padding: 0px; margin-top: 25px; margin-bottom: 25px;">
+								<div class="col-md-6 col-md-offset-3" style="background: white; padding: 0px; margin-top: 50px; margin-bottom: 50px;">
 									<div class="col-md-12">
 										<h4 align="center">[임시]답변이 없습니다</h4>
 									</div>
@@ -156,16 +276,29 @@
 						</c:when>
 						<c:when test="${fn:length(SelectedBoardAnswerList) != 0}">
 							<div class="col-md-12" style="padding: 0px;background: #EAEAEA">
-								<div class="col-md-6 col-md-offset-3 panel panel-default" style="background: white; padding: 0px; margin-top: 25px; margin-bottom: 25px;">
+								
+								<div class="col-md-6 col-md-offset-3" style="background: white; padding: 0px; margin-top: 100px; margin-bottom: 0px;">
 									<c:forEach items="${SelectedBoardAnswerList}" var="SelectedBoardAnswerList">
+										<input type="hidden" value="${SelectedBoardAnswerList.num}" name="answernum">
+										<input type="hidden" value="${SelectedBoardAnswerList.writernum}" id="answerwriternum">
 										<!-- 이미지 -->
-										<div class="col-md-2" style="height: 100px; padding: 0px;"><img src="/resources/image/answer.png" class="img-rounded"></div>		
+										<div class="col-md-2" style="height: 100px; padding: 0px;">
+											<c:choose>
+												<c:when test="${SelectedBoardAnswerList.adop eq false}">
+													<img src="/resources/image/answer.png" class="img-rounded">
+												</c:when>
+												<c:when test="${SelectedBoardAnswerList.adop eq true}">
+													<img src="/resources/image/adan.png" class="img-rounded">
+												</c:when>
+											</c:choose>
+											
+										</div>		
 										<div class="col-md-10  panel panel-default" style="height: 100px;padding-bottom: 25px;">
 											<!-- 작성자 -->
 											<div class="col-md-12" style="height: 50px;margin: 0px">
 												<h4 align="center">
-													<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-													${SelectedBoardAnswerList.writer}님의 답변
+													<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+													[${SelectedBoard.title}]에 대한 답변
 												</h4>
 											</div>	
 										</div>
@@ -189,22 +322,27 @@
 								<!-- 조회수 -->
 								<div class="col-md-2">
 									<h4 align="center">
-										<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-										${SelectedBoard.viewcount}
+										
 									</h4>
 								</div>
 								<!-- 수정 -->
-								<div class="col-md-2">
-									<button type="button" class="btn btn-primary btn-sm" style="margin: 5px 0px 5px 0px;">
-										<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+								<div class="col-md-1" style="padding: 0px">
+									<button type="button" class="btn btn-primary btn-xs" style="margin: 10px 0px 10px 0px;" id="answermodity">
+										<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
 										수정
 									</button>
 								</div>
-						
-								<div class="col-md-2">
-									<button type="button" class="btn btn-primary btn-sm" style="margin: 5px 0px 5px 0px;">
-										<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+								<!-- 삭제-->
+								<div class="col-md-1" style="padding: 0px">
+									<button type="button" class="btn btn-primary btn-xs" style="margin: 10px 0px 10px 0px;" id="answerdelete">
+										<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 										삭제
+									</button>
+								</div>
+								<div class="col-md-1" style="padding: 0px">
+									<button type="button" class="btn btn-primary btn-xs" style="margin: 10px 0px 10px 0px;"  name="adopbutton">
+										<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+										채택
 									</button>
 								</div>
 							</div>
@@ -215,11 +353,35 @@
 							
 						</c:when>
 					</c:choose>
+					<div class="col-md-6 col-md-offset-3" style="padding: 0px; ">
+						<form method="post" action="/answerwrite" id="answerwriteform">
+							<input type="hidden" name="boardnum" value="${SelectedBoard.boardnum}">
+								<div class="col-md-1" style="height: 50px; padding: 0px;">
+									<img src="/resources/image/title.png" width="50px" height="50px" class="img-rounded">
+								</div>	
+								<div class="col-md-11" style="height: 50px; padding: 0px; background: white;">
+									<h3 style="margin:15px 0px 15px 0px; text-align: center">[${SelectedBoard.title}] 에 대한 답변</h3>
+								</div>
+								<div class="col-md-12" style="padding: 0px;">
+									<textarea  name="content" ></textarea>
+								</div>
+					<button class="btn btn-primary col-md-4 col-md-offset-1" style="margin-top: 25px;" type="button" id="answerwritebutton">확인</button>
+					<button class="btn btn-primary col-md-4 col-md-offset-2"  style="margin-top: 25px;"type="button">목록보기</button>
+				</form>
+			</div>
 					
 					
 					
 			</div>
+				<div style="height: 100px; background: #E4F7BA; padding-top: 50px">
+					<p>만든이: 이승렬	-	이메일: dltmdfuf95@naver.com	-	사이트 이용약관	-	개인정보처리방침</p>
+				</div>
 	  </div>
 	</div>
 </body>
+<script>
+CKEDITOR.replace('content', {
+	filebrowserUploadUrl: '/resources/image'
+});
+</script>
 </html>

@@ -21,11 +21,18 @@
 <script src="https://cdn.ckeditor.com/4.9.2/basic/ckeditor.js"></script>
 <script>
   $( document ).ready( function() {
-	  
+	 
+	  $('#allsearchbutton').click(function(){
+
+		  if($('#allsearch').val()==''){
+			  alert('검색어를 입력해주세요');
+		  }
+		  else{
+			  location.href = '/list?major=%&topic=%&title=' + $('#allsearch').val() + '&page=1';
+		  }
+	  });
   } );
-  function IdCheck(){
-	  
-  }
+
 </script>
 </head>
 <body>
@@ -66,13 +73,12 @@
 								<li><a href="/list?topic=career">진로</a></li>
 							</ul>
 						</li>
-						<li class="active"><a href="#">순위</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" action="/search" method="post">
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="검색">
+								<input type="text" class="form-control" placeholder="검색" id="allsearch">
 							</div>
-							<button type="submit" class="btn btn-default">검색</button>
+							<button type="button" class="btn btn-default" id="allsearchbutton">검색</button>
 					</form>
 					<c:choose>
 						<c:when test="${LoginUser == null}">
@@ -84,22 +90,30 @@
 						<c:when test="${LoginUser != null}">
 							<ul class="nav navbar-nav navbar-right">
       							<li><a href="/logout"><span class="glyphicon glyphicon-user"></span>로그아웃</a></li>
-      							<li><a href="/myinfo"><span class="glyphicon glyphicon-log-in"></span>내정ㅂ</a></li>
+      							<li><a href="/myinfo"><span class="glyphicon glyphicon-log-in"></span>내정보</a></li>
     						</ul>
 						</c:when>
 					</c:choose>
 					</div>
 				</nav>
 			</div>
-			<!-- -----------------------------------세번째줄----------------------------------- -->
-			<div class="col-md-6 col-md-offset-3" style="height: 800px; background: black; margin-top: 25px; padding: 0px;">
+			
+			<c:choose>
+				<c:when test="${kind == 'q' }">
+			<div class="col-md-6 col-md-offset-3" style="height: 800px; margin-top: 25px; padding: 0px;">
 				<form method="post" action="/boardwrite">
-					<div class="col-md-2" style="height: 50px; padding: 0px; background: red;"></div>
-					<div class="col-md-10" style="height: 50px; padding: 0px;"><input type="text" placeholder="제목" style="height: 50px; width: 	500px" name="title"></div>
-					
-					<div class="col-md-2" style="height: 50px; padding: 0px; background: orange;">주제</div>
-					<div class="col-md-3" style="height: 50px; padding: 0px; background: red;">
-						<select class="form-control" name="topic">
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/title.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-11" style="height: 50px; padding: 0px;">
+								<input type="text" placeholder="제목" style="height: 50px; width: 550px" name="title">
+					</div>
+							
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/topic.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-5" style="padding: 0px;">
+						<select class="form-control" style="height: 50px;" name="topic">
 							<option>자유</option>
 							<option>공부</option>
 							<option>수업</option>
@@ -107,18 +121,18 @@
 						</select>
 					</div>
 					
-					<div class="col-md-2" style="height: 50px; padding: 0px; background: orange;">학과</div>
-					<div class="col-md-3" style="height: 50px; padding: 0px; background: red;">
-						<select class="form-control" name="major">
-							<option>컴퓨터공학과</option>
-							<option>경영학과</option>
-							<option>정보통신학과</option>
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/major.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-5" style="padding: 0px;">
+						<select class="form-control" style="height: 50px;" name="major">
+							<option>컴퓨터공학</option>
+							<option>경영학</option>
+							<option>정보통신학</option>
 							<option>마법방어술학과</option>
 						</select>
 					</div>
-					
-					<div class="col-md-2" style="height: 50px; padding: 0px; background: orange;"></div>
-					
+
 					<div class="col-md-12" style="padding: 0px;">
 						<textarea  name="content" ></textarea>
 					</div>
@@ -126,8 +140,64 @@
 					<button class="btn btn-primary col-md-4 col-md-offset-2"  style="margin-top: 25px;"type="button">목록보기</button>
 				</form>
 			</div>
+			</c:when>
 			
+			<c:when test="${kind == 'qm' }">
+			<div class="col-md-6 col-md-offset-3" style="height: 800px; margin-top: 25px; padding: 0px;">
+				<form method="post" action="/boardmodify">
+					<input type="hidden" name="boardnum" value="${boardnum}">
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/title.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-11" style="height: 50px; padding: 0px;">
+						<input type="text" placeholder="제목" style="height: 50px; width: 550px" name="title">
+					</div>
+							
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/topic.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-5" style="padding: 0px;">
+						<input type="text" value="${selectedboard.topic}" style="height: 50px; width: 250px" name="topic" readonly="readonly">
+					</div>
+					
+					<div class="col-md-1" style="height: 50px; padding: 0px;">
+						<img src="/resources/image/major.png" width="50px" height="50px" class="img-rounded">
+					</div>
+					<div class="col-md-5" style="padding: 0px;">
+						<input type="text" value="${selectedboard.major}" style="height: 50px; width: 250px" name="major" readonly="readonly">
+					</div>
+
+					<div class="col-md-12" style="padding: 0px;">
+						<textarea  name="content" ></textarea>
+					</div>
+					<button class="btn btn-primary col-md-4 col-md-offset-1" style="margin-top: 25px;" type="submit">확인</button>
+					<button class="btn btn-primary col-md-4 col-md-offset-2"  style="margin-top: 25px;"type="button">목록보기</button>
+				</form>
+			</div>
+			</c:when>
+			
+			<c:when test="${kind == 'am' }">
+				<div class="col-md-6 col-md-offset-3" style="height: 800px; margin-top: 25px; padding: 0px;">
+						<form method="post" action="/answermodify">
+							<input type="hidden" name="num" value="${selectedboardanswer.num}">
+							<input type="hidden" name="boardnum" value="${selectedboardanswer.boardnum}">
+								<div class="col-md-1" style="height: 50px; padding: 0px;">
+									<img src="/resources/image/title.png" width="50px" height="50px" class="img-rounded">
+								</div>	
+								<div class="col-md-11" style="height: 50px; padding: 0px; background: white;">
+									<h3 style="margin:15px 0px 15px 0px; text-align: center">[${selectedboard.title}] 에 대한 답변수정</h3>
+								</div>
+								<div class="col-md-12" style="padding: 0px;">
+									<textarea  name="content" ></textarea>
+								</div>
+					<button class="btn btn-primary col-md-4 col-md-offset-1" style="margin-top: 25px;" type="submit">확인</button>
+					<button class="btn btn-primary col-md-4 col-md-offset-2"  style="margin-top: 25px;"type="button" id="answermodify">목록보기</button>
+				</form>
+			</div>
+			</c:when>
+			</c:choose>
 			<!-- -----------------------------------네번째줄----------------------------------- -->
+			
 			<!-- -----------------------------------다섯번째줄----------------------------------- -->
 			
 			

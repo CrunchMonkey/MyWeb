@@ -5,7 +5,7 @@
 <mapper namespace="Mapper">
 
 <select id="GetBoardList"  parameterType="kr.co.dto.MemberDTO" resultType="kr.co.dto.BoardDTO">
-	select * from board where (topic like '%${topic}%' or major like '%${topic}%') and (writer like '%${writer}%' and title like '%${title}%');
+	select * from board where (topic like '%${topic}%' and major like '%${major}%') and (writer like '%${writer}%' and title like '%${title}%') order by boardnum desc;
 </select>
 
 
@@ -27,10 +27,67 @@
 
 <insert id="BoardWrite" parameterType="kr.co.dto.BoardDTO">
 	insert into board(major,topic,boardnum,num,writer,title,content,viewcount,end,date) 
-	values (#{major},#{topic},(select coalesce(max(b.boardnum),0) + 1 from board b),'201434026','철우',#{title},#{content},0,false,null);
+	values (#{major},#{topic},(select coalesce(max(b.boardnum),0) + 1 from board b),#{num},(select name from member where num = #{num}),#{title},#{content},0,false,null);
 </insert>
 
 <select id="GetBoard" resultType="kr.co.dto.BoardDTO">
 	select * from board where boardnum = #{boardnum};
 </select>
+
+<update id="BoardModify" parameterType="kr.co.dto.BoardDTO">
+	update board set title=#{title},content=#{content} where boardnum=#{boardnum};
+</update>
+
+<insert id="AnswerWrite" parameterType="kr.co.dto.AnswerDTO">
+	insert into answer (adop,boardnum,writer,content,date,writernum) values (0,#{boardnum},#{writer},#{content},null,#{writernum});
+</insert>
+
+<select id="GetMemberInfo" resultType="kr.co.dto.MemberDTO">
+	select * from member where num = #{num};
+</select>
+
+<delete id="BoardDelete" parameterType="String">
+	delete from board where boardnum = #{boardnum};
+</delete>
+
+<delete id="AnswerDelete" parameterType="String">
+	delete from answer where boardnum = #{boardnum};
+</delete>
+
+<delete id="AnswerDelete2" parameterType="int">
+	delete from answer where num = #{num};
+</delete>
+
+<select id="GetAnswerOne" resultType="kr.co.dto.AnswerDTO">
+	select * from answer where num = #{num};
+</select>
+
+<update id="AnswerModify" parameterType="kr.co.dto.AnswerDTO">
+	update answer set content=#{content} where num=#{num};
+</update>
+
+<update id="ViewCount" parameterType="kr.co.dto.BoardDTO">
+	 update board set viewcount=viewcount+1 where boardnum = #{boardnum};
+</update>
+
+<update id="AdopAnswer" parameterType="int">
+	 update answer set adop = 1 where num = #{num};
+</update>
+
+<update id="AdopBoard" parameterType="int">
+	 update board set end = true where boardnum = #{boardnum};
+</update>
+
+<select id="GetManyBoard" resultType="kr.co.dto.BoardDTO">
+	SELECT * FROM board where viewcount=(SELECT MAX(viewcount) FROM board);
+</select>
+
+<select id="GetRandomBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board order by rand() limit 1;
+</select>
+
+<select id="GetFinishBoard" resultType="kr.co.dto.BoardDTO">
+	select * from board where end = 1 order by rand() limit 1;
+</select>
+	
 </mapper>

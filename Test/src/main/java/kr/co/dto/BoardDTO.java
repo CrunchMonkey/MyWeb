@@ -7,7 +7,7 @@ public class BoardDTO {
 	String writer;
 	String content;
 	int viewcount;
-	int num;
+	String num;
 	boolean end;
 	String topic;
 	Date date;
@@ -68,10 +68,10 @@ public class BoardDTO {
 	public void setViewcount(int viewcount) {
 		this.viewcount = viewcount;
 	}
-	public int getNum() {
+	public String getNum() {
 		return num;
 	}
-	public void setNum(int num) {
+	public void setNum(String num) {
 		this.num = num;
 	}
 	

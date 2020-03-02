@@ -7,9 +7,22 @@ public class AnswerDTO {
 	int boardnum;
 	String writer;
 	String content;
-	int reccount;
 	Date date;
+	int num;
+	String writernum;
 	
+	public String getWriternum() {
+		return writernum;
+	}
+	public void setWriternum(String writernum) {
+		this.writernum = writernum;
+	}
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
 	public boolean isAdop() {
 		return adop;
 	}
@@ -33,12 +46,6 @@ public class AnswerDTO {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public int getReccount() {
-		return reccount;
-	}
-	public void setReccount(int reccount) {
-		this.reccount = reccount;
 	}
 	public Date getDate() {
 		return date;
